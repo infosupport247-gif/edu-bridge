@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduBridge — Every future deserves a chance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="filters.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <link rel="stylesheet" href="supabase.css" />
+  </head>
+  <body>
+    <div class="cursor-glow"></div>
+    <main>
+      <section class="hero" id="home">
+        <nav class="nav shell">
+          <a class="brand" href="#home"><span class="brand-mark">e</span> EduBridge</a>
+          <div class="nav-links"><a href="#students">Find students</a><a href="#how">How it works</a><a href="#impact">Our impact</a></div>
+          <a class="login login-trigger" href="#login">Log in <span>↗</span></a>
+        </nav>
+
+        <div class="hero-content shell">
+          <div class="hero-copy reveal">
+            <p class="eyebrow"><span class="pulse"></span> Verified education sponsorship</p>
+            <h1>One act of support.<br /><em>A lifetime</em> of possibility.</h1>
+            <p class="hero-text">Connect directly with verified schools and give a student the chance to keep learning, growing, and dreaming.</p>
+            <div class="actions"><a class="button primary" href="#students">Sponsor a student <span>→</span></a><a class="button ghost" href="#how">See how it works <span class="play">▶</span></a></div>
+            <div class="trusted"><div class="faces"><i>AR</i><i>JM</i><i>SL</i><i>+</i></div><p>Joined by <strong>12,540+</strong> people creating brighter futures</p></div>
+          </div>
+
+          <div class="hero-art reveal delay">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="sun"></div>
+            <div class="photo-card main-photo"><div class="photo-overlay"></div><div class="student-shape"><span></span></div><p>Every lesson is a beginning.</p></div>
+            <div class="floating funded"><span class="check">✓</span><div><small>Student A-10482</small><b>Fully funded</b></div></div>
+            <div class="floating amount"><small>Education fund</small><strong>$2.4M</strong><span>↑ 28% this year</span></div>
+            <div class="scribble">A brighter<br />tomorrow <b>↗</b></div>
+          </div>
+        </div>
+        <div class="ticker"><div><span>EDUCATION FOR EVERY CHILD</span><b>✦</b><span>VERIFIED. TRANSPARENT. HUMAN.</span><b>✦</b><span>EDUCATION FOR EVERY CHILD</span><b>✦</b><span>VERIFIED. TRANSPARENT. HUMAN.</span></div></div>
+      </section>
+
+      <section class="stats shell" id="impact">
+        <p class="section-kicker">Small actions, lasting change</p>
+        <div class="stat-grid"><div><strong data-count="12540">0</strong><span>students supported</span></div><div><strong data-count="1240">0</strong><span>verified schools</span></div><div><strong data-count="32">0</strong><span>countries reached</span></div><div><strong>$<b data-count="24">0</b>M</strong><span>education funded</span></div></div>
+      </section>
+
+      <section class="students-section" id="students">
+        <div class="shell"><div class="section-head reveal"><div><p class="section-kicker">Make a direct difference</p><h2>Meet students who<br /><em>need a bridge.</em></h2></div><a href="#join" class="text-link">Explore all students <span>→</span></a></div>
+          <div class="filters reveal"><button class="active">All needs</button><button>School fees</button><button>Learning materials</button><button>Due soon <i>12</i></button></div>
+          <div class="search-controls reveal"><label class="filter-select">Country<select id="country-filter" aria-label="Filter by country"><option value="all">All countries</option><option value="kenya">Kenya</option><option value="india">India</option><option value="peru">Peru</option></select></label><label class="filter-select">State / region<select id="state-filter" aria-label="Filter by state or region" disabled><option value="all">Select a country first</option></select></label><div class="fee-filter"><div><span>Maximum fee</span><strong id="fee-value">$1,000</strong></div><input id="fee-range" type="range" min="0" max="1000" value="1000" step="25" aria-label="Maximum fee" /><div class="range-label"><span id="fee-min">$0</span><span id="fee-max">$1,000</span></div></div></div>
+          <p class="filter-summary" id="filter-summary" aria-live="polite">Showing all verified students</p>
+          <div class="student-grid">
+            <article class="student-card reveal" data-country="kenya" data-state="nairobi" data-fee="420"><div class="card-image kenya"><span class="verified">✓ Verified school</span><span class="id">STUDENT A-10482</span></div><div class="card-body"><div class="card-top"><div><h3>Grade 6 · Nairobi</h3><p>School fees · Due 30 Oct</p></div><span class="flag">🇰🇪</span></div><div class="progress-label"><span class="funded-amount" data-usd="302">$302 funded</span><b class="goal-amount" data-usd="420">$420 goal</b></div><div class="progress"><i style="width:72%"></i></div><div class="card-bottom"><strong class="remaining-amount" data-usd="118">$118 <small>to go</small></strong><button class="sponsor-btn" data-student="Student A-10482">Sponsor <span>→</span></button></div></div></article>
+            <article class="student-card feature reveal delay" data-country="india" data-state="rajasthan" data-fee="145"><div class="card-image india"><span class="urgent">● Urgent · 48 hours</span><span class="id">STUDENT B-09126</span></div><div class="card-body"><div class="card-top"><div><h3>Grade 8 · Jaipur</h3><p>Annual school fees · Due soon</p></div><span class="flag">🇮🇳</span></div><div class="progress-label"><span class="funded-amount" data-usd="72">₹6,000 funded</span><b class="goal-amount" data-usd="145">₹12,000 goal</b></div><div class="progress"><i style="width:50%"></i></div><div class="card-bottom"><strong class="remaining-amount" data-usd="73">₹6,000 <small>to go</small></strong><button class="sponsor-btn" data-student="Student B-09126">Sponsor <span>→</span></button></div></div></article>
+            <article class="student-card reveal delay-2" data-country="peru" data-state="cusco" data-fee="160"><div class="card-image peru"><span class="verified">✓ Verified school</span><span class="id">STUDENT C-22031</span></div><div class="card-body"><div class="card-top"><div><h3>Grade 4 · Cusco</h3><p>Books & learning materials</p></div><span class="flag">🇵🇪</span></div><div class="progress-label"><span class="funded-amount" data-usd="85">$85 funded</span><b class="goal-amount" data-usd="160">$160 goal</b></div><div class="progress"><i style="width:53%"></i></div><div class="card-bottom"><strong class="remaining-amount" data-usd="75">$75 <small>to go</small></strong><button class="sponsor-btn" data-student="Student C-22031">Sponsor <span>→</span></button></div></div></article>
+          </div><p class="empty-state" id="empty-state" hidden>No verified students match these filters. Try increasing the maximum fee.</p>
+        </div>
+      </section>
+
+      <section class="how shell" id="how"><div class="how-heading reveal"><p class="section-kicker">Designed for trust</p><h2>Your support reaches<br />where it <em>matters.</em></h2><p>Every case is screened by the school and verified by our team before it reaches you.</p></div><div class="steps"><article class="step reveal"><span>01</span><div class="step-icon school-icon">⌂</div><h3>Schools share a need</h3><p>Verified schools create privacy-safe student cases with supporting documents.</p></article><article class="step reveal delay"><span>02</span><div class="step-icon choose-icon">♡</div><h3>You choose who to help</h3><p>Find a student or fund a need that feels meaningful to you.</p></article><article class="step reveal delay-2"><span>03</span><div class="step-icon impact-icon">✦</div><h3>See your impact</h3><p>Track your contribution from sponsorship to school-confirmed payment.</p></article></div></section>
+
+      <section class="transparency"><div class="shell transparent-wrap"><div class="route-copy reveal"><p class="section-kicker">No question marks</p><h2>See every step<br />of your <em>impact.</em></h2><p>Your contribution follows a transparent, protected path—so you know it’s making a real difference.</p><a class="text-link" href="#join">How our verification works <span>→</span></a></div><div class="route reveal delay"><div class="route-line"></div><div class="route-point sponsor"><div class="route-icon">♡</div><div><small>Step 01</small><b>You sponsor</b><span>$100 contribution</span></div></div><div class="route-point school"><div class="route-icon">⌂</div><div><small>Step 02</small><b>Verified school</b><span>Funds received safely</span></div></div><div class="route-point success"><div class="route-icon">✓</div><div><small>Step 03</small><b>Education unlocked</b><span>Payment confirmed</span></div></div></div></div></section>
+
+      <section class="join shell" id="join"><div class="join-panel"><div class="confetti c1">✦</div><div class="confetti c2">●</div><div class="confetti c3">✳</div><p class="section-kicker">The next chapter starts with you</p><h2>Give a child<br />more reasons to <em>shine.</em></h2><p>Every contribution, of any size, helps a student stay in school and move forward.</p><a class="button primary light" href="#students">Find a student <span>→</span></a></div></section>
+    </main>
+    <footer class="shell"><a class="brand" href="#home"><span class="brand-mark">e</span> EduBridge</a><p>© 2026 EduBridge. Learning changes everything.</p><div><a href="#">Privacy</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div></footer>
+    <div class="modal-backdrop auth-backdrop" id="auth-modal" aria-hidden="true"><div class="modal auth-modal"><button class="modal-close" aria-label="Close">×</button><div class="auth-screen" data-screen="welcome"><span class="modal-icon">✦</span><p class="section-kicker">Welcome to EduBridge</p><h2>Start changing a<br /><em>future today.</em></h2><p>Sign in or create a verified account before sponsoring a student.</p><button class="social-login" data-provider="Google"><b>G</b> Continue with Google</button><button class="social-login" data-provider="Apple"><b>●</b> Continue with Apple</button><div class="auth-divider"><span>or</span></div><button class="button primary full auth-next" data-next="signup">Create account with email <span>→</span></button><p class="auth-switch">Already have an account? <button class="text-button auth-next" data-next="signin">Log in</button></p></div><form class="auth-screen" data-screen="signup" hidden><button type="button" class="back-button auth-next" data-next="welcome">← Back</button><p class="section-kicker">Create your account</p><h2>Your giving<br /><em>starts here.</em></h2><label>Full name<input required type="text" placeholder="Your name" /></label><label>Email address<input id="signup-email" required type="email" placeholder="you@example.com" /></label><label>Password<input required type="password" placeholder="At least 8 characters" minlength="8" /></label><button class="button primary full" type="submit">Send verification email <span>→</span></button><p class="auth-switch">Already verified? <button type="button" class="text-button auth-next" data-next="signin">Log in</button></p></form><form class="auth-screen" data-screen="verify" hidden><span class="modal-icon success-icon">✓</span><p class="section-kicker">Check your inbox</p><h2>Verify your<br /><em>email address.</em></h2><p>We sent a six-digit verification code to <b id="verification-email">your email</b>.</p><label>Verification code<input id="verification-code" required inputmode="numeric" maxlength="6" placeholder="• • • • • •" /></label><button class="button primary full" type="submit">Verify &amp; continue <span>→</span></button><button type="button" class="text-button resend-code">Resend code</button></form><form class="auth-screen" data-screen="signin" hidden><button type="button" class="back-button auth-next" data-next="welcome">← Back</button><p class="section-kicker">Welcome back</p><h2>Continue your<br /><em>impact.</em></h2><label>Email address<input id="signin-email" required type="email" placeholder="you@example.com" /></label><label>Password<input required type="password" placeholder="Your password" /></label><div class="login-row"><label class="remember"><input type="checkbox" /> Remember me</label><button type="button" class="text-button">Forgot password?</button></div><button class="button primary full" type="submit">Log in <span>→</span></button><p class="auth-switch">New to EduBridge? <button type="button" class="text-button auth-next" data-next="signup">Create account</button></p></form><div class="auth-screen auth-complete" data-screen="complete" hidden><span class="modal-icon success-icon">✓</span><p class="section-kicker">Email verified</p><h2>You’re all set to<br /><em>make an impact.</em></h2><p>Your account is verified. You can now log in and sponsor a student.</p><button class="button primary full auth-next" data-next="signin">Go to log in <span>→</span></button></div></div></div>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
