@@ -60,6 +60,16 @@
           </div><p class="empty-state" id="empty-state" hidden>No verified students match these filters. Try increasing the maximum fee.</p>
         </div>
       </section>
+      <section class="payment-section shell" id="payment" style="display:none">
+        <div class="payment-overlay" id="payment-overlay"></div>
+        <div class="payment-panel">
+          <button class="payment-back" onclick="document.getElementById('payment-overlay').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'})">← Back to students</button>
+          <div class="payment-info"></div>
+          <div class="payment-footer">
+            <p>Secured checkout · Your sponsorship goes directly to the verified school</p>
+          </div>
+        </div>
+      </section>
 
       <section class="how shell" id="how"><div class="how-heading reveal"><p class="section-kicker">Designed for trust</p><h2>Your support reaches<br />where it <em>matters.</em></h2><p>Every case is screened by the school and verified by our team before it reaches you.</p></div><div class="steps"><article class="step reveal"><span>01</span><div class="step-icon school-icon">⌂</div><h3>Schools share a need</h3><p>Verified schools create privacy-safe student cases with supporting documents.</p></article><article class="step reveal delay"><span>02</span><div class="step-icon choose-icon">♡</div><h3>You choose who to help</h3><p>Find a student or fund a need that feels meaningful to you.</p></article><article class="step reveal delay-2"><span>03</span><div class="step-icon impact-icon">✦</div><h3>See your impact</h3><p>Track your contribution from sponsorship to school-confirmed payment.</p></article></div></section>
 

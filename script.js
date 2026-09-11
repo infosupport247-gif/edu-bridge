@@ -44,7 +44,88 @@ const setAuthMessage=(message,type='')=>{authMessage.textContent=message;authMes
 const showAuthScreen=screen=>{authModal.querySelectorAll('.auth-screen').forEach(item=>item.hidden=item.dataset.screen!==screen);authModal.dataset.screen=screen;};
 const openAuth=screen=>{showAuthScreen(screen);authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';};
 const closeAuth=()=>{authModal.classList.remove('open');authModal.setAttribute('aria-hidden','true');document.body.style.overflow='';};
-document.querySelectorAll('.sponsor-btn,.login-trigger').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();document.getElementById('students').scrollIntoView({behavior:'smooth'})}));
+document.querySelectorAll('.sponsor-btn').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    const studentId = btn.dataset.student;
+    const card = btn.closest('.student-card');
+    const name = card?.querySelector('h3')?.textContent.trim() || studentId;
+    const remaining = btn.closest('.card-bottom')?.querySelector('.remaining-amount')?.textContent.trim() || '—';
+    try{
+      if(supabaseReady){
+        const {data:user,session,error} = await supabase.auth.getUser();
+        if(session){
+          showPayment(studentId,name,remaining);
+          return;
+        }
+      }
+      openAuth('signin');
+      waitForLogin().then(()=>showPayment(studentId,name,remaining));
+    }catch(e){
+      openAuth('signin');
+      setTimeout(()=>showPayment(studentId,name,remaining),1500);
+    }
+  });
+});
+
+let pendingPayment=null;
+function waitForLogin(){
+  return new Promise(resolve=>{
+    const check=()=>{
+      setTimeout(()=>{
+        if(supabaseReady){
+          supabase.auth.getUser().then(({session})=>{
+            if(session){resolve(true);return}
+          }).catch(()=>resolve(false));
+        }else{resolve(false)}
+        if(!pendingPayment)resolve(false);
+      },600);
+    };
+    const iv=setInterval(()=>{
+      if(document.querySelector('.auth-modal')?.classList.contains('open')===false){
+        clearInterval(iv);
+        check();
+      }
+    },300);
+  });
+}
+function showPayment(id,name,remaining){
+  pendingPayment=id;
+  const sec=document.getElementById('payment');
+  const overlay=document.getElementById('payment-overlay');
+  const info=sec?.querySelector('.payment-info');
+  const back=sec?.querySelector('.payment-back');
+  if(info){
+    info.innerHTML=`
+      <div class="payment-student">
+        <span class="payment-label">Sponsoring</span>
+        <strong class="payment-name">${name}</strong>
+      </div>
+      <div class="payment-remaining">
+        <span class="payment-label">Amount to sponsor</span>
+        <strong class="payment-amount">${remaining}</strong>
+      </div>
+      <div class="payment-actions">
+        <a class="button primary full" href="https://buy.stripe.com/PLACEHOLDER" target="_blank" rel="noopener">Proceed to Payment <span>→</span></a>
+        <button class="button ghost full payment-cancel">Cancel</button>
+      </div>
+      <p class="payment-note">You will be redirected to a secure payment page to complete your sponsorship.</p>
+    `;
+  }
+  if(overlay){
+    overlay.classList.add('open');
+    setTimeout(()=>sec?.scrollIntoView({behavior:'smooth'}),100);
+  }
+}
+document.addEventListener('click',e=>{
+  if(e.target?.classList?.contains('payment-cancel') || e.target?.classList?.contains('payment-back')){
+    const overlay=document.getElementById('payment-overlay');
+    if(overlay)overlay.classList.remove('open');
+    if(pendingPayment){
+      document.querySelector(`[data-student="${pendingPayment}"]`)?.scrollIntoView({behavior:'smooth'});
+      pendingPayment=null;
+    }
+  }
+});
 authModal.querySelector('.modal-close').addEventListener('click',closeAuth);authModal.addEventListener('click',event=>{if(event.target===authModal)closeAuth();});
 document.querySelectorAll('.auth-next').forEach(button=>button.addEventListener('click',()=>showAuthScreen(button.dataset.next)));
 document.querySelector('[data-screen="signup"]').addEventListener('submit',async event=>{event.preventDefault();if(!supabaseReady){setAuthMessage('Add your Supabase project credentials to send emails.','error');return}const email=document.getElementById('signup-email').value,password=event.currentTarget.querySelector('input[type="password"]').value,name=event.currentTarget.querySelector('input[type="text"]').value;const {error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:`${location.origin}${location.pathname}`}});if(error){setAuthMessage(error.message,'error');return}document.getElementById('verification-email').textContent=email;showAuthScreen('verify');});
