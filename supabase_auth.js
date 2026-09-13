@@ -1,4 +1,4 @@
-// Lightweight Supabase Auth client — direct REST API
+// Lightweight Supabase Auth client - direct REST API
 // Sets window.supabaseAuthClient as { auth: {...} }
 // Stores access token from signIn so getUser() works
 
@@ -7,90 +7,87 @@ const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi
 
 var _accessToken = null;
 
-function fetchAuth(path, opts = {}) {
-    const url = BASE + path;
-    const headers = {
-        'apikey': KEY,
-        'Authorization': 'Bearer ' + (opts._token || KEY),
-        'Content-Type': 'application/json',
-        ...(opts.headers || {})
-    };
-    delete opts._token;
-    return fetch(url, {
-        ...opts,
-        headers: headers
-    }).then(async r => {
-        const data = await r.json().catch(() => ({}));
-        if (path.includes('grant_type=password') && data.access_token) {
-            _accessToken = data.access_token;
-        }
-        if (!r.ok) throw { message: data.message || 'HTTP ' + r.status, status: r.status };
-        return data;
-    });
+function fetchAuth(path, opts) {
+  opts = opts || {};
+  const url = BASE + path;
+  const headers = {
+    'apikey': KEY,
+    'Authorization': 'Bearer ' + (opts._token || KEY),
+    'Content-Type': 'application/json'
+  };
+  delete opts._token;
+  return fetch(url, {
+    ...opts,
+    headers: headers
+  }).then(async function(r) {
+    const data = await r.json().catch(function() { return {}; });
+    if (path.indexOf('grant_type=password') !== -1 && data.access_token) {
+      _accessToken = data.access_token;
+    }
+    if (!r.ok) throw { message: data.message || 'HTTP ' + r.status, status: r.status };
+    return data;
+  });
 }
 
 window.supabaseAuthClient = {
-    auth: {
-        async getUser() {
-            if (!_accessToken) {
-                const r = await fetch(BASE + '/user', {
-                    headers: { apikey: KEY }
-                });
-                const d = await r.json().catch(() => ({}));
-                if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
-                return { data: { user: d, session: d }, error: null };
-            }
-            const h = { apikey: KEY, Authorization: 'Bearer ' + _accessToken };
-            const r = await fetch(BASE + '/user', { headers: h });
-            const d = await r.json().catch(() => ({}));
-            if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
-            return { data: { user: d, session: d }, error: null };
-        },
-        async signInWithPassword({ email, password }) {
-            const d = await fetchAuth('/token?grant_type=password', {
-                method: 'POST',
-                body: JSON.stringify({ email, password })
-            });
-            if (d.access_token)
-                return { data: { session: d, user: d.user || d }, error: null };
-            return { data: { session: null, user: null }, error: d };
-        },
-        async signUp({ email, password, options = {} }) {
-            const body = { email, password };
-            if (options.data) body.data = options.data;
-            if (options.emailRedirectTo) body.emailRedirectTo = options.emailRedirectTo;
-            const r = await fetchAuth('/signup', {
-                method: 'POST',
-                body: JSON.stringify(body)
-            });
-            if (r.user)
-                return { data: { user: r.user, session: r.session || null }, error: null };
-            return { data: { user: null, session: null }, error: r };
-        },
-        async verifyOtp({ email, token, type }) {
-            const r = await fetchAuth('/verify', {
-                method: 'POST',
-                body: JSON.stringify({ email, token, type })
-            });
-            if (r.session) {
-                _accessToken = r.session.access_token;
-                return { data: { session: r.session, user: r.user || r }, error: null };
-            }
-            return { data: { session: null, user: null }, error: r };
-        },
-        async signInWithOAuth({ provider, options = {} }) {
-            const redirectTo = options.redirectTo || location.origin + location.pathname;
-            location.href = BASE + '/authorize?provider=' + provider +
-                '&redirect_to=' + encodeURIComponent(redirectTo);
-            return { error: null };
-        },
-        async resend({ type, email }) {
-            const r = await fetchAuth('/resend', {
-                method: 'POST',
-                body: JSON.stringify({ type, email })
-            });
-            if (!r.error) return { data: { message_id: r.message_id }, error: null };
-            return { data: null, error: r };
-        }
+  auth: {
+    async getUser() {
+      if (!_accessToken) {
+        const r = await fetch(BASE + '/user', { headers: { apikey: KEY } });
+        const d = await r.json().catch(function() { return {}; });
+        if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
+        return { data: { user: d, session: d }, error: null };
+      }
+      const h = { apikey: KEY, Authorization: 'Bearer ' + _accessToken };
+      const r = await fetch(BASE + '/user', { headers: h });
+      const d = await r.json().catch(function() { return {}; });
+      if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
+      return { data: { user: d, session: d }, error: null };
+    },
+    async signInWithPassword(obj) {
+      const d = await fetchAuth('/token?grant_type=password', {
+        method: 'POST',
+        body: JSON.stringify({ email: obj.email, password: obj.password })
+      });
+      if (d.access_token)
+        return { data: { session: d, user: d.user || d }, error: null };
+      return { data: { session: null, user: null }, error: d };
+    },
+    async signUp(obj) {
+      const body = { email: obj.email, password: obj.password };
+      if (obj.options && obj.options.data) body.data = obj.options.data;
+      if (obj.options && obj.options.emailRedirectTo) body.emailRedirectTo = obj.options.emailRedirectTo;
+      const r = await fetchAuth('/signup', {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+      if (r.user)
+        return { data: { user: r.user, session: r.session || null }, error: null };
+      return { data: { user: null, session: null }, error: r };
+    },
+    async verifyOtp(obj) {
+      const r = await fetchAuth('/verify', {
+        method: 'POST',
+        body: JSON.stringify({ email: obj.email, token: obj.token, type: obj.type })
+      });
+      if (r.session) {
+        _accessToken = r.session.access_token;
+        return { data: { session: r.session, user: r.user || r }, error: null };
+      }
+      return { data: { session: null, user: null }, error: r };
+    },
+    async signInWithOAuth(obj) {
+      const redirectTo = (obj.options && obj.options.redirectTo) || location.origin + location.pathname;
+      location.href = BASE + '/authorize?provider=' + obj.provider + '&redirect_to=' + encodeURIComponent(redirectTo);
+      return { error: null };
+    },
+    async resend(obj) {
+      const r = await fetchAuth('/resend', {
+        method: 'POST',
+        body: JSON.stringify({ type: obj.type, email: obj.email })
+      });
+      if (!r.error) return { data: { message_id: r.message_id }, error: null };
+      return { data: null, error: r };
     }
+  }
 };
