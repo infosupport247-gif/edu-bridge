@@ -63,11 +63,8 @@
       <section class="payment-section shell" id="payment" style="display:none">
         <div class="payment-overlay" id="payment-overlay"></div>
         <div class="payment-panel">
-          <button class="payment-back" onclick="document.getElementById('payment-overlay').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'})">← Back to students</button>
-          <div class="payment-info"></div>
-          <div class="payment-footer">
-            <p>Secured checkout · Your sponsorship goes directly to the verified school</p>
-          </div>
+          <button class="payment-close" onclick="document.getElementById('payment-overlay').classList.remove('open')" aria-label="Close">×</button>
+          <div class="payment-content" id="payment-content"></div>
         </div>
       </section>
 
