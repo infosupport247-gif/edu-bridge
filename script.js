@@ -22,10 +22,10 @@ countryFilter.addEventListener('change',()=>{setFilters();setCurrencyLabels();re
 async function refreshExchangeRate(){if(viewer.currency==='USD')return;try{const response=await fetch(`https://api.frankfurter.app/latest?from=USD&to=${viewer.currency}`);const data=await response.json();if(data.rates?.[viewer.currency]){viewer.rate=data.rates[viewer.currency];setFilters();setCurrencyLabels();renderStudents()}}catch{}}
 refreshExchangeRate();
 document.querySelectorAll('.filters button').forEach(button=>button.addEventListener('click',()=>{document.querySelector('.filters .active').classList.remove('active');button.classList.add('active');}));
-import{SUPABASE_URL,SUPABASE_ANON_KEY}from'./supabase-config.js';
-import{createClient}from'./supabase_bundle.js';
-const supabaseReady=!SUPABASE_URL.startsWith('YOUR_')&&!SUPABASE_ANON_KEY.startsWith('YOUR_');
-const supabase=supabaseReady?createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+import{SUPABASE_ANON_KEY}from'./supabase-config.js';
+import{supabaseAuth}from'./supabase_auth.js';
+const supabaseReady=!SUPABASE_ANON_KEY.startsWith('YOUR_');
+const supabase=supabaseReady?{auth:{...supabaseAuth}}:null;
 const authModal=document.getElementById('auth-modal');
 const authMessage=document.createElement('p');authMessage.className='auth-message';
 const setAuthMessage=(message,type='')=>{authMessage.textContent=message;authMessage.className=`auth-message ${type}`;authModal.querySelector('.auth-screen:not([hidden])')?.append(authMessage);};

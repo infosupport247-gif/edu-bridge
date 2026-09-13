@@ -1,7 +1,7 @@
 // Lightweight Supabase Auth client — direct REST API calls
 // Replaces the esm.sh Supabase bundle (which has broken import directives on GitHub Pages)
 const SUPABASE_AUTH_BASE = 'https://ukkrwpaxxjmcozbvnjjb.supabase.co/auth/v1';
-const SUPABASE_ANON_KEY = 'eyJhbG...dXBh';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVra3J3cGF4eGptY296YnZuampiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMTA1MjMsImV4cCI6MjEwNDU4NjUyM30.HY5GGg2SBL4WyVGeN9rrgYm_14DzhCvsFlP576ay1Yc';
 
 function supabaseFetch(path, options = {}) {
     const url = `${SUPABASE_AUTH_BASE}${path}`;
