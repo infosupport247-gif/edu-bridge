@@ -15,14 +15,12 @@ function fetchAuth(path, opts = {}) {
         'Content-Type': 'application/json',
         ...(opts.headers || {})
     };
-    // Remove _token from options before sending
     delete opts._token;
     return fetch(url, {
         ...opts,
         headers: headers
     }).then(async r => {
         const data = await r.json().catch(() => ({}));
-        // Capture access token from login response
         if (path.includes('grant_type=password') && data.access_token) {
             _accessToken = data.access_token;
         }
@@ -35,19 +33,18 @@ window.supabaseAuthClient = {
     auth: {
         async getUser() {
             if (!_accessToken) {
-                // No token — try without (will fail, but that's expected for unauthenticated)
                 const r = await fetch(BASE + '/user', {
                     headers: { apikey: KEY }
                 });
                 const d = await r.json().catch(() => ({}));
-                if (!r.ok) return { data: { user: null }, error: d.message || 'HTTP ' + r.status };
-                return { data: { user: d }, error: null };
+                if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
+                return { data: { user: d, session: d }, error: null };
             }
             const h = { apikey: KEY, Authorization: 'Bearer ' + _accessToken };
             const r = await fetch(BASE + '/user', { headers: h });
             const d = await r.json().catch(() => ({}));
-            if (!r.ok) return { data: { user: null }, error: d.message || 'HTTP ' + r.status };
-            return { data: { user: d }, error: null };
+            if (!r.ok) return { data: { user: null, session: null }, error: d.message || 'HTTP ' + r.status };
+            return { data: { user: d, session: d }, error: null };
         },
         async signInWithPassword({ email, password }) {
             const d = await fetchAuth('/token?grant_type=password', {
