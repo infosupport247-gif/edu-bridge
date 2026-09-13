@@ -32,6 +32,7 @@ const setAuthMessage=(message,type='')=>{authMessage.textContent=message;authMes
 const showAuthScreen=screen=>{authModal.querySelectorAll('.auth-screen').forEach(item=>item.hidden=item.dataset.screen!==screen);authModal.dataset.screen=screen;};
 const openAuth=screen=>{showAuthScreen(screen);authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';};
 const closeAuth=()=>{authModal.classList.remove('open');authModal.setAttribute('aria-hidden','true');document.body.style.overflow='';};
+let pendingStudent=null;
 document.querySelectorAll('.sponsor-btn').forEach(btn=>{
   btn.addEventListener('click',async()=>{
     const studentId=btn.dataset.student;
@@ -39,6 +40,7 @@ document.querySelectorAll('.sponsor-btn').forEach(btn=>{
     const name=card?.querySelector('h3')?.textContent.trim()||studentId;
     const remainingData=btn.closest('.card-bottom')?.querySelector('.remaining-amount')?.dataset?.usd;
     const remaining=remainingData?formatCurrency(Number(remainingData)*viewer.rate)+' to go':btn.closest('.card-bottom')?.querySelector('.remaining-amount')?.textContent.trim()||'—';
+    pendingStudent={studentId,name,remaining};
     try{
       if(supabaseReady){
         const{data:{session}}=await supabase.auth.getUser();
@@ -46,16 +48,6 @@ document.querySelectorAll('.sponsor-btn').forEach(btn=>{
       }
     }catch(e){}
     openAuth('signin');
-    const iv=setInterval(()=>{
-      if(!document.querySelector('.auth-modal')?.classList.contains('open')){
-        clearInterval(iv);
-        if(supabaseReady){
-          supabase.auth.getUser().then(({session})=>{
-            if(session)showPayment(studentId,name,remaining);
-          }).catch(()=>{});
-        }
-      }
-    },300);
   });
 });
 document.addEventListener('click',e=>{
@@ -69,7 +61,7 @@ authModal.addEventListener('click',event=>{if(event.target===authModal)closeAuth
 document.querySelectorAll('.auth-next').forEach(button=>button.addEventListener('click',()=>showAuthScreen(button.dataset.next)));
 document.querySelector('[data-screen="signup"]').addEventListener('submit',async event=>{event.preventDefault();if(!supabaseReady){setAuthMessage('Add your Supabase project credentials to send emails.','error');return}const email=document.getElementById('signup-email').value,password=event.currentTarget.querySelector('input[type="password"]').value,name=event.currentTarget.querySelector('input[type="text"]').value;const{error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:`${location.origin}${location.pathname}`}});if(error){setAuthMessage(error.message,'error');return}document.getElementById('verification-email').textContent=email;showAuthScreen('verify');});
 document.querySelector('[data-screen="verify"]').addEventListener('submit',async event=>{event.preventDefault();const token=document.getElementById('verification-code').value,email=document.getElementById('signup-email').value;if(token.length<6){setAuthMessage('Enter the six-digit code from your email.','error');return}if(!supabaseReady)return;const{error}=await supabase.auth.verifyOtp({email,token,type:'signup'});if(error){setAuthMessage(error.message,'error');return}document.getElementById('signin-email').value=email;showAuthScreen('complete');});
-document.querySelector('[data-screen="signin"]').addEventListener('submit',async event=>{event.preventDefault();if(!supabaseReady){setAuthMessage('Add your Supabase project credentials to log in.','error');return}const email=document.getElementById('signin-email').value,password=event.currentTarget.querySelector('input[type="password"]').value;const{error}=await supabase.auth.signInWithPassword({email,password});if(error){setAuthMessage(error.message,'error');return}document.querySelector('.login-trigger').innerHTML='My account <span>✓</span>';closeAuth();});
+document.querySelector('[data-screen="signin"]').addEventListener('submit',async event=>{event.preventDefault();if(!supabaseReady){setAuthMessage('Add your Supabase project credentials to log in.','error');return}const email=document.getElementById('signin-email').value,password=event.currentTarget.querySelector('input[type="password"]').value;const{error}=await supabase.auth.signInWithPassword({email,password});if(error){setAuthMessage(error.message,'error');return}closeAuth();if(supabaseReady&&pendingStudent){const{data:{session}}=await supabase.auth.getUser();if(session){showPayment(pendingStudent.studentId,pendingStudent.name,pendingStudent.remaining);}else{pendingStudent=null;openAuth('signin');}}});
 document.querySelectorAll('.social-login').forEach(button=>button.addEventListener('click',async()=>{if(!supabaseReady){setAuthMessage('Add your Supabase project credentials to use social sign-in.','error');return}const{error}=await supabase.auth.signInWithOAuth({provider:button.dataset.provider.toLowerCase(),options:{redirectTo:`${location.origin}${location.pathname}`}});if(error)setAuthMessage(error.message,'error');}));
 document.querySelector('.resend-code').addEventListener('click',async event=>{if(!supabaseReady)return;const{error}=await supabase.auth.resend({type:'signup',email:document.getElementById('signup-email').value});event.currentTarget.textContent=error?'Could not resend':'Verification code resent';});
 function showPayment(studentId,name,remaining){
