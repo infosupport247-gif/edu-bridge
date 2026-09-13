@@ -23,7 +23,7 @@ async function refreshExchangeRate(){if(viewer.currency==='USD')return;try{const
 refreshExchangeRate();
 document.querySelectorAll('.filters button').forEach(button=>button.addEventListener('click',()=>{document.querySelector('.filters .active').classList.remove('active');button.classList.add('active');}));
 import{SUPABASE_URL,SUPABASE_ANON_KEY}from'./supabase-config.js';
-import{createClient}from'./esm.sh.__supabase-supabase-js@2.js';
+import{createClient}from'./supabase_bundle.js';
 const supabaseReady=!SUPABASE_URL.startsWith('YOUR_')&&!SUPABASE_ANON_KEY.startsWith('YOUR_');
 const supabase=supabaseReady?createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
 const authModal=document.getElementById('auth-modal');
