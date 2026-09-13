@@ -84,3 +84,4 @@ function showPayment(studentId,name,remaining){
   overlay.classList.add('open');
   setTimeout(()=>document.getElementById('payment').scrollIntoView({behavior:'smooth'}),120);
 }
+// rebuild trigger 1789273095
